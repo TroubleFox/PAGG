@@ -23,7 +23,7 @@ public class Coordinates {
     {
         this.row = row;
         this.col = col;
-//        this.moveCost = moveCost;
+        this.moveCost = 0;
 //        checked = true;
     }
     /**
