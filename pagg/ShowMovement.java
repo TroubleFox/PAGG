@@ -8,46 +8,84 @@ import java.util.List;
  * @author troublefox
  */
 public class ShowMovement {
-    private List<Coordinates> closedList;
-    private List<Coordinates> openList;
+    private List<Coordinates> closedList = new ArrayList<>();
+    private List<Coordinates> openList = new ArrayList<>();
+    private List<Coordinates> tempList = new ArrayList<>();
     private int maxMovementSpeed;
     int totalMoveCost = 0;
-    
+    int dl=1;
     PAGGMainFrame paggMainFrame = new PAGGMainFrame();
 //    FieldTableModel fieldTableModel = new FieldTableModel();
     
 //  holt Playerkoordinaten und Bewegungsweite  
-    public ShowMovement()      
+    public ShowMovement(int x, int y, int move)      
     {
-        System.out.println(paggMainFrame.getFieldTableModel().getPlayer1().getRow()+""+paggMainFrame.getFieldTableModel().getPlayer1().getCol());
-        openList.add(new Coordinates(paggMainFrame.getFieldTableModel().getPlayer1().getRow(), paggMainFrame.getFieldTableModel().getPlayer1().getCol(), 0));
-        maxMovementSpeed = paggMainFrame.getFieldTableModel().getPlayer1().getMovementSpeed();
+        openList.add(new Coordinates(x, y, 0));
+        maxMovementSpeed = move;
         openList.get(0).setParent(true);
-        newNodes();
+        
     }
     
     public void newNodes() throws IndexOutOfBoundsException
     {    
+        System.out.println("Durchlauf "+dl+". openList wird gelesen: ");
         for ( Coordinates e : openList ) 
         {
+            System.out.println("Element: "+e.getRow()+" "+e.getCol()+" aus openList gezogen");
             totalMoveCost = e.getMoveCost();
+
             if ( e.isParent() && (totalMoveCost<=maxMovementSpeed) == true )
             {
+                System.out.println("Erzeuge neue Kinder von "+e.getRow()+" "+e.getCol());
                 checkListAdd(e, 0, +1);         //Feld O
                 checkListAdd(e, +1, 0);         //Feld S
                 checkListAdd(e, 0, -1);         //Feld W
                 checkListAdd(e, -1, 0);         //Feld N
+                System.out.println("Neue Kinder für "+e.getRow()+" "+e.getCol()+" angelegt");
             }
-            getClosedList().add(e);
-            openList.remove(e);  
-        }          
-
+            
+//            
+//            System.out.println(e.getRow()+" "+e.getCol()+" "+e.getMoveCost()+" "+e.isParent());
+        }      
+        dl++;
+        for( int i = 0; i < openList.size(); i++ )
+        {
+            if (openList.get(i).isParent());
+            {
+                System.out.println(openList.get(i).getRow()+" "+openList.get(i).getCol()+" von openList zu ClosedList");
+                openList.get(i).setParent(false);
+                closedList.add(openList.get(i));
+                openList.remove(i);
+            }
+        }
+        
+        for (Coordinates o : tempList) {
+            System.out.println("TempList aktuell: "+o.getRow()+" "+o.getCol()+" "+o.getMoveCost()+" "+o.isParent());
+        }
+        
+//        openList = tempList;
+        openList = new ArrayList<>(tempList);
+//        for (int i = 0; i < tempList.size(); i++) {
+//            
+//        System.arraycopy(tempList[i], 0, openList[i], 0, tempList[i].length);                      //kopiert 2D.Array ohne Referenz
+//        
+//        }
+        
+        for (Coordinates o : openList) {
+            System.out.println("in openList übernommen: "+o.getRow()+" "+o.getCol()+" "+o.getMoveCost()+" "+o.isParent());
+        }
+        
+//        System.out.println(openList.get(0).getMoveCost());
+//        System.out.println("Parentumstellung");
         for (Coordinates e : openList ) {
             e.setParent(true);
         }
 
+                
+        
         if( openList.size() > 0 ) 
         {
+            tempList.clear();
             newNodes();
         }
        
@@ -57,17 +95,30 @@ public class ShowMovement {
         
     }
     
+    public boolean CoordinatesCompare(Coordinates c,List<Coordinates> list)
+    {
+        for (Coordinates cl : list) {
+            if(cl.getRow()==c.getRow() && cl.getCol()==c.getCol())
+            {
+                return false;
+            }
+            
+        }
+        return true;
+    }
+    
     public void checkListAdd(Coordinates e, int x, int y)
     {
-        Coordinates c = new Coordinates(e.getRow()+x, e.getCol()+y);
-        if( !closedList.contains(c) )
+        Coordinates c = new Coordinates((e.getRow()+(x)), (e.getCol()+(y)));
+        System.out.println("Prüfung: "+c.getRow()+" "+c.getCol()+" "+c.getMoveCost()+" "+c.isParent());
+        if( CoordinatesCompare(c, closedList)  )
         {
-            if( !openList.contains(c) )
+            if( CoordinatesCompare(c, tempList) )
             {
-                if( paggMainFrame.getFieldTableModel().getTileTable()[c.getCol()][c.getRow()].isWalkable() 
-                &&  !paggMainFrame.getFieldTableModel().getTileTable()[c.getCol()][c.getRow()].isOccupied() == true)
+                if( paggMainFrame.getFieldTableModel().getTileTable()[c.getRow()][c.getCol()].isWalkable() 
+                &&  !paggMainFrame.getFieldTableModel().getTileTable()[c.getRow()][c.getCol()].isOccupied() == true)
                 {
-                    if ( paggMainFrame.getFieldTableModel().getTileTable()[c.getCol()][c.getRow()].isObstacle() == true )
+                    if ( paggMainFrame.getFieldTableModel().getTileTable()[c.getRow()][c.getCol()].isObstacle() == true )
                     {
                             c.setMoveCost(totalMoveCost+2);
                     }
@@ -75,19 +126,22 @@ public class ShowMovement {
                     {
                             c.setMoveCost(totalMoveCost+1);
                     }
-                    openList.add(c);        
+                    tempList.add(c);
+                    System.out.println(c.getRow()+" "+c.getCol()+" "+c.getMoveCost()+" "+c.isParent()+" in checkListAdd erstellt und zu tempList hinzugef.");
                 }
                 
             }
             else
-            {
-                if ( openList.get(openList.indexOf(c)).getMoveCost() > c.getMoveCost() )
+            {       //hat noch keine Movekosten -------------------------------------------------------überprüfung später
+                System.out.println("größe von TempList: "+tempList.size()+" "+c.getMoveCost());
+                if ( tempList.get(tempList.indexOf(c)).getMoveCost() > c.getMoveCost() )        //überprüfe movementGröße von c und objekt in tempList mit gleichen Koordinaten und nehme den kleineren Wert 
                 {
-                    openList.get(openList.indexOf(c)).setMoveCost(c.getMoveCost());
+                    tempList.get(tempList.indexOf(c)).setMoveCost(c.getMoveCost());
                 }     
             }
             
         }
+        
     }
 
     /**
