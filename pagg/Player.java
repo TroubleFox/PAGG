@@ -29,7 +29,7 @@ public class Player extends Tile {
     private int col;
     
     
-    Player(int tileNum, int moveDirection, boolean walkable, boolean obstacle, boolean sightBlock)
+    Player(int tileNum, int moveDirection, boolean walkable, boolean obstacle, boolean sightBlock, int movementSpeed)
     {
         
         super(tileNum,moveDirection,walkable,obstacle,sightBlock);   
@@ -40,6 +40,7 @@ public class Player extends Tile {
         this.obstacle = false;
         this.sightBlock = false;
         this.occupied = true;
+        this.movementSpeed = movementSpeed;
 //        this.image = new ImageIcon("src/images/spieler"+tileNum+".jpg");
         this.image = new ImageIcon("src/images/"+tileNum+".jpg");
         
