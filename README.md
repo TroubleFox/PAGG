@@ -7,6 +7,13 @@ Goals: fov-basic or -diamond;
 fog of war
 
 
+29-05-2015 ---------------------------------------------------------
+
+testing written breadth-first-algorithm for movement calculation!
+generating a list of possible coordinates calculated on character movement speed almost reachable
+
+28-05-2015 ---------------------------------------------------------
+
 This is my first small TileSet i use to make the first maps and code tests:
 (some space reserved for later tiles)
 
