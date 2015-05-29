@@ -209,7 +209,8 @@ public class PAGGMainFrame extends javax.swing.JFrame {
     private void movementbuttonMouseClicked(java.awt.event.MouseEvent evt) {                                            
         System.out.println("Ausgabe Koordinaten in MainFrame aus fieldTableModel: "+fieldTableModel.getPlayer1().getRow()+" "+fieldTableModel.getPlayer1().getCol());
         
-        ShowMovement sm = new ShowMovement();
+        ShowMovement sm = new ShowMovement(fieldTableModel.getPlayer1().getRow(), fieldTableModel.getPlayer1().getCol(), fieldTableModel.getPlayer1().getMovementSpeed());
+        sm.newNodes();
         System.out.println("kurz vor Listenausgabe");
         for (Coordinates e : sm.getClosedList() ) {
             System.out.println("x: "+e.getRow()+" y: "+e.getCol());
