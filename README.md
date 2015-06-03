@@ -3,9 +3,12 @@ Pathfinder Action Grid Game
 
 Just started learning Java. First project is a Pathfinder supplement for PC vs PC fights in a client/server application. Rules are simplified in this first version.
 
-Goals: fov-basic or -diamond;
-fog of war
+great goals: fov-basic or -diamond<br>
+fog of war<br>
+threading<br>
 
+until most of the game is in construction the code will be full of comments with old code parts.
+I'll tidy things up, when i feel its time to do it. Deal with it! ;)
 
 03-06-2015 ---------------------------------------------------------
 
