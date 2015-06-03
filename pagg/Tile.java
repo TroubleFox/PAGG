@@ -23,6 +23,8 @@ public class Tile {
     private boolean visible  = false;
     private boolean known    = false;
     private boolean occupied = false;
+    
+    private boolean path = false;
 
     
     
@@ -186,6 +188,20 @@ public class Tile {
      */
     public void setOccupied(boolean occupied) {
         this.occupied = occupied;
+    }
+
+    /**
+     * @return the path
+     */
+    public boolean isPath() {
+        return path;
+    }
+
+    /**
+     * @param path the path to set
+     */
+    public void setPath(boolean path) {
+        this.path = path;
     }
     
 }
