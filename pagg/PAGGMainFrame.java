@@ -1,16 +1,25 @@
 package pagg;
 
+import java.awt.Color;
 import java.awt.Component;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.Image;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import javax.imageio.ImageIO;
+import java.awt.Toolkit;
+import java.awt.image.ImageObserver;
+import java.awt.image.ImageProducer;
+import java.awt.image.MemoryImageSource;
+import java.awt.image.PixelGrabber;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
+import sun.swing.ImageIconUIResource;
 
 /**
  *
@@ -23,6 +32,7 @@ public class PAGGMainFrame extends javax.swing.JFrame {
     private int s1col;
     private int s2row;
     private int s2col;
+    private List<Coordinates> sm = new ArrayList<>();
     /**
      * Creates new form PAGGMainFrame
      */
@@ -58,9 +68,15 @@ public class PAGGMainFrame extends javax.swing.JFrame {
             TableColumn col = jTable1.getColumnModel().getColumn(colIndex);
             ImageCellRenderer renderer = new ImageCellRenderer();
             col.setCellRenderer(renderer);
+
+            setForeground(Color.BLUE);
+            setBackground(Color.BLACK);
+
             //            col.setPreferredWidth(renderer.image.getWidth(null));
             col.setMaxWidth(32);
             jTable1.setRowHeight(32);
+            //            jTable1.add(renderer.getLbl());
+
         }
         jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -142,31 +158,49 @@ public class PAGGMainFrame extends javax.swing.JFrame {
     }// </editor-fold>                        
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {                                     
-
+        
 //        fieldTableModel.setValueAt(this, jTable1.getSelectedRow(), jTable1.getSelectedColumn());
-        if( (fieldTableModel.getTileTable()[jTable1.getSelectedRow()][jTable1.getSelectedColumn()].isWalkable() 
-         && !(fieldTableModel.getTileTable()[jTable1.getSelectedRow()][jTable1.getSelectedColumn()].isOccupied())) == true)
-        {
+        
+//        if( (fieldTableModel.getTileTable()[jTable1.getSelectedRow()][jTable1.getSelectedColumn()].isWalkable() 
+//         && !(fieldTableModel.getTileTable()[jTable1.getSelectedRow()][jTable1.getSelectedColumn()].isOccupied())) == true)
+//        {
+//            fieldTableModel.setValueAt(fieldTableModel.getPlayer1(), jTable1.getSelectedRow(), jTable1.getSelectedColumn());
+////            System.out.println("von Zeile "+getS1row()+" und Spalte "+getS1col());
+////            System.out.println("nach Zeile "+jTable1.getSelectedRow()+" und Spalte "+jTable1.getSelectedColumn());
+////            System.out.println("originalTile: "+fieldTableModel.getTileTableOrigin()[getS1row()][getS1col()].getImage());
+////            System.out.println("SpielfeldTile: "+fieldTableModel.getTileTable()[getS1row()][getS1col()].getImage());
+////            fieldTableModel.setValueAt(fieldTableModel.getTileTableOrigin()[getS1row()][getS1col()], getS1row(), getS1col());
+//            fieldTableModel.setValueAt(fieldTableModel.getTileTableOrigin()[fieldTableModel.getPlayer1().getRow()][fieldTableModel.getPlayer1().getCol()], fieldTableModel.getPlayer1().getRow(),fieldTableModel.getPlayer1().getCol());
+//            fieldTableModel.getPlayer1().setRow(jTable1.getSelectedRow());
+//            fieldTableModel.getPlayer1().setCol(jTable1.getSelectedColumn());
+//            
+//        }
+//        else
+//        {
+////            System.out.println("Bewegung nicht möglich");
+////            System.out.println("Zielort begehbar: "+fieldTableModel.getTileTable()[jTable1.getSelectedRow()][jTable1.getSelectedColumn()].isWalkable()
+////            +";  besetzt: "+fieldTableModel.getTileTable()[jTable1.getSelectedRow()][jTable1.getSelectedColumn()].isOccupied());
+//        }
+
+        if( fieldTableModel.getTileTable()[jTable1.getSelectedRow()][jTable1.getSelectedColumn()].isPath() )
+        {   
+            for (Coordinates e : sm ) {
+            System.out.println("x: "+e.getRow()+" y: "+e.getCol());
+            fieldTableModel.getTileTable()[e.getRow()][e.getCol()].setPath(false);
+            
+            }
+            fieldTableModel.setTileTable(fieldTableModel.getTileTableOrigin());
+            
+            
             fieldTableModel.setValueAt(fieldTableModel.getPlayer1(), jTable1.getSelectedRow(), jTable1.getSelectedColumn());
-//            System.out.println("von Zeile "+getS1row()+" und Spalte "+getS1col());
-//            System.out.println("nach Zeile "+jTable1.getSelectedRow()+" und Spalte "+jTable1.getSelectedColumn());
-//            System.out.println("originalTile: "+fieldTableModel.getTileTableOrigin()[getS1row()][getS1col()].getImage());
-//            System.out.println("SpielfeldTile: "+fieldTableModel.getTileTable()[getS1row()][getS1col()].getImage());
-//            fieldTableModel.setValueAt(fieldTableModel.getTileTableOrigin()[getS1row()][getS1col()], getS1row(), getS1col());
+            fieldTableModel.setValueAt(fieldTableModel.getTileTableOrigin()[getS1row()][getS1col()], getS1row(), getS1col());
             fieldTableModel.setValueAt(fieldTableModel.getTileTableOrigin()[fieldTableModel.getPlayer1().getRow()][fieldTableModel.getPlayer1().getCol()], fieldTableModel.getPlayer1().getRow(),fieldTableModel.getPlayer1().getCol());
             fieldTableModel.getPlayer1().setRow(jTable1.getSelectedRow());
             fieldTableModel.getPlayer1().setCol(jTable1.getSelectedColumn());
-            
-        }
-        else
-        {
-//            System.out.println("Bewegung nicht möglich");
-//            System.out.println("Zielort begehbar: "+fieldTableModel.getTileTable()[jTable1.getSelectedRow()][jTable1.getSelectedColumn()].isWalkable()
-//            +";  besetzt: "+fieldTableModel.getTileTable()[jTable1.getSelectedRow()][jTable1.getSelectedColumn()].isOccupied());
-        }
        
        
         fieldTableModel.fireTableDataChanged();
+        }
       
     }                                    
 
@@ -189,12 +223,12 @@ public class PAGGMainFrame extends javax.swing.JFrame {
         fieldTableModel.getPlayer1().setOccupied(true);
 //        fieldTableModel.getPlayer2().setOccupied(true);
         fieldTableModel.getPlayer1().setRow(11);
-        fieldTableModel.getPlayer1().setCol(3);
+        fieldTableModel.getPlayer1().setCol(10);
         
 //        s2row = 10;
 //        s2col = 28;
         
-        fieldTableModel.getTileTable()[11][3] = fieldTableModel.getPlayer1();
+        fieldTableModel.getTileTable()[11][10] = fieldTableModel.getPlayer1();
 //        fieldTableModel.getTileTable()[10][28] = fieldTableModel.getPlayer2();
         fieldTableModel.fireTableDataChanged();
 //        System.out.println("originalTile: "+fieldTableModel.getTileTableOrigin()[11][3].getImage());
@@ -212,16 +246,22 @@ public class PAGGMainFrame extends javax.swing.JFrame {
         ShowMovement sm = new ShowMovement(fieldTableModel.getPlayer1().getRow(), fieldTableModel.getPlayer1().getCol(), fieldTableModel.getPlayer1().getMovementSpeed());
         sm.newNodes();
         System.out.println("kurz vor Listenausgabe");
+        sm.getClosedList().remove(0);
+        this.sm = sm.getClosedList();
         for (Coordinates e : sm.getClosedList() ) {
             System.out.println("x: "+e.getRow()+" y: "+e.getCol());
+            fieldTableModel.getTileTable()[e.getRow()][e.getCol()].setPath(true);
+            
         }
-
+        fieldTableModel.fireTableDataChanged();
+        
+        
         
     }                                           
 
-    /**
-     * @param args the command line arguments
-     */
+    
+    
+    
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -295,33 +335,176 @@ public class PAGGMainFrame extends javax.swing.JFrame {
     {
         return fieldTableModel;
     }
-
+    
+//    public BufferedImage makeTranslucent(BufferedImage source, float alpha)
+//            {
+//               
+//               Graphics2D g2d = source.createGraphics();
+//               g2d.setComposite(AlphaComposite.SRC, alpha);
+//               g2d.drawImage(source,0,0,null);
+//               g2d.dispose();
+//               return source;
+//            }
+    
+//    public Image makeTranslucentImages(Image src) {
+//            Image transImage = new Image() {
+//
+//                @Override
+//                public int getWidth(ImageObserver observer) {
+//                    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//                }
+//
+//                @Override
+//                public int getHeight(ImageObserver observer) {
+//                    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//                }
+//
+//                @Override
+//                public ImageProducer getSource() {
+//                    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//                }
+//
+//                @Override
+//                public Graphics getGraphics() {
+//                    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//                }
+//
+//                @Override
+//                public Object getProperty(String name, ImageObserver observer) {
+//                    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//                }
+//            };
+//            int width = src.getWidth(null);
+//            int height = src.getHeight(null);
+//           
+//                  int[] pixels = new int[width * height];
+//                  PixelGrabber pg = new PixelGrabber(src, 0, 0, width, height, pixels, 0, width);
+//                  try {
+//                        pg.grabPixels();
+//                  }
+//                  catch (InterruptedException e) {
+//                        System.out.println("Error grabbing pixels.");
+//                  }
+//
+//                  for (int k = 0; k < pixels.length; k++) {
+//                        int alpha = (pixels[k] >> 24) & 0xff;
+//                        if (alpha != 0)
+//                              pixels[k] = 0x4F000000 | (pixels[k] & 0x00FFFFFF);
+//                  }
+//                  transImage = Toolkit.getDefaultToolkit().createImage(new MemoryImageSource(width, height, pixels, 0, width));
+//            
+//            return transImage;
+//      }
 
     class ImageCellRenderer extends JLabel implements TableCellRenderer
     {
-
+        private JLabel lbl = new JLabel();
+        private JLabel lbl2 = new JLabel("test");
+        private MyLabel lbl4 = new MyLabel();
+        
+//        private ImageIcon image = null;
+       
+//        public ImageCellRenderer()
+//                
+//        {
+////            setOpaque(true);
+//                    lbl2.setOpaque(true);
+//            lbl2 = new JLabel();
+//            lbl2.setBackground(Color.BLUE);
+//            lbl2.setForeground(Color.BLUE);
+//            add(lbl2);
+//        }
+        
+        public void fillColor(JTable t, JLabel l, boolean isSelected )
+        {
+            if(isSelected)
+            {
+                l.setBackground(t.getSelectionBackground());
+                l.setForeground(t.getSelectionForeground());
+            }
+            else
+            {
+                l.setBackground(l.getBackground());
+                l.setForeground(l.getForeground());
+            }
+        }
+        
+        
+        
+       
         public Component getTableCellRendererComponent(JTable table, Object value,
                                                        boolean isSelected,
                                                        boolean hasFocus,
                                                        int rowIndex, int colIndex)
         {
-              
-            setIcon(fieldTableModel.getTileTable()[rowIndex][colIndex].getImage());
-//            setIcon(((Tile) value).getImage());                                      //alternativ auch möglich
+            setOpaque(true);
             setText("");
-//    //            setText("");
-//    //        if(rowIndex == 0)
-//    //        {
-//    //            setIcon(new ImageIcon(image));
-//    //            setText("");
-//    //        }
-//    //        else
-//    //        {
-//    //            setIcon((ImageIcon)null);
-//    //            setText(value.toString());
-//    //        }
-            return this;
-        }    
+//            setIcon(fieldTableModel.getTileTable()[rowIndex][colIndex].getImage());
+//            setIcon(((Tile) value).getImage());                                      //alternativ auch möglich
+            ImageIcon image = new ImageIcon("src/images/blue.png");
+            ImageIcon image1 = fieldTableModel.getTileTable()[rowIndex][colIndex].getImage();
+              
+//            ImageIcon image = new ImageIcon();
+//            if( fieldTableModel.getTileTable()[rowIndex][colIndex].isPath() )
+//            {
+//                ImageIcon image2 = new ImageIcon("src/images/blues/"+fieldTableModel.getTileTable()[rowIndex][colIndex].getTileNum()+"b.jpg");
+//                image = image2;
+//            }
+//            else
+//            {
+//                image = fieldTableModel.getTileTable()[rowIndex][colIndex].getImage();
+//            }
+            lbl.setIcon(image1);
+            
+            if( fieldTableModel.getTileTable()[rowIndex][colIndex].isPath() )
+            {
+//                lbl2.setOpaque(true);
+//                lbl2.setBackground(Color.red);
+//                lbl2.setForeground(Color.blue);
+//                lbl2.setFont(lbl2.getFont().deriveFont(Font.BOLD, 48));
+//
+//                lbl2.setIcon(image);
+//                lbl2.setText("hi");
+//                
+                  lbl.setIcon(new ImageIcon("src/images/blues/"+fieldTableModel.getTileTable()[rowIndex][colIndex].getTileNum()+"b.jpg"));
+//                lbl.add(lbl2);
+//                return lbl2;
+            }
+            else
+            {
+//                image = fieldTableModel.getTileTable()[rowIndex][colIndex].getImage();
+            
+            
+//            if(hasFocus)
+//            {
+//                setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.yellow));
+//            }
+//            else
+//            {
+//                setBorder(null);
+//            }
+//            if(isSelected)
+//            {
+//                lbl.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.yellow));
+//            }
+//            else
+//            {
+//                lbl.setBorder(null);
+//            }
+//            lbl.setBackground(Color.blue);
+//            if( fieldTableModel.getTileTable()[rowIndex][colIndex].isPath())
+//            {
+//                lbl.setBorder(BorderFactory.createMatteBorder(1,1,1,1,Color.BLUE.brighter()));
+//            }
+//            lbl.setBorder(BorderFactory.createMatteBorder(1,1,1,1,Color.BLUE.brighter()));
+
+//            fillColor(jTable1,lbl4,isSelected);
+
+//            return lbl;
+            }
+            return lbl;
+        }   
+
 
     }
 }
