@@ -18,6 +18,8 @@ Have to fix OutOfBoundsException when calculating near field border.
 But so far:
 ![path1](https://cloud.githubusercontent.com/assets/12558206/7956158/5f0611d8-09de-11e5-8689-382fd2fc5146.jpg)
 ![path2](https://cloud.githubusercontent.com/assets/12558206/7956161/645f71d8-09de-11e5-9f97-b0020676ba06.jpg)
+or in the forest temple:
+![path3](https://cloud.githubusercontent.com/assets/12558206/7956731/6874b9dc-09e2-11e5-9ae3-5ecd69dd0d7e.jpg)
 
 
 29-05-2015 ---------------------------------------------------------
