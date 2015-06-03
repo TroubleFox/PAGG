@@ -12,6 +12,7 @@ public class ShowMovement {
     private List<Coordinates> openList = new ArrayList<>();
     private List<Coordinates> tempList = new ArrayList<>();
     private int maxMovementSpeed;
+    private Coordinates tempCoordinates;
     int totalMoveCost = 0;
     int dl=1;
     PAGGMainFrame paggMainFrame = new PAGGMainFrame();
@@ -34,7 +35,7 @@ public class ShowMovement {
             System.out.println("Element: "+e.getRow()+" "+e.getCol()+" aus openList gezogen");
             totalMoveCost = e.getMoveCost();
 
-            if ( e.isParent() && (totalMoveCost<=maxMovementSpeed) == true )
+            if ( e.isParent() && (totalMoveCost<maxMovementSpeed) == true )
             {
                 System.out.println("Erzeuge neue Kinder von "+e.getRow()+" "+e.getCol());
                 checkListAdd(e, 0, +1);         //Feld O
@@ -50,13 +51,14 @@ public class ShowMovement {
         dl++;
         for( int i = 0; i < openList.size(); i++ )
         {
-            if (openList.get(i).isParent());
-            {
+//            if (openList.get(i).isParent());
+//            {
                 System.out.println(openList.get(i).getRow()+" "+openList.get(i).getCol()+" von openList zu ClosedList");
                 openList.get(i).setParent(false);
                 closedList.add(openList.get(i));
                 openList.remove(i);
-            }
+                i--;
+//            }
         }
         
         for (Coordinates o : tempList) {
@@ -79,6 +81,7 @@ public class ShowMovement {
 //        System.out.println("Parentumstellung");
         for (Coordinates e : openList ) {
             e.setParent(true);
+//            System.out.println(e.getRow()+" "+e.getCol()+" auf Parent true gesetzt");
         }
 
                 
@@ -100,6 +103,8 @@ public class ShowMovement {
         for (Coordinates cl : list) {
             if(cl.getRow()==c.getRow() && cl.getCol()==c.getCol())
             {
+//                System.out.println(cl.getRow()+" "+cl.getCol()+" aus c.getCol() c.getRow());
+                tempCoordinates = cl;
                 return false;
             }
             
@@ -113,32 +118,40 @@ public class ShowMovement {
         System.out.println("Prüfung: "+c.getRow()+" "+c.getCol()+" "+c.getMoveCost()+" "+c.isParent());
         if( CoordinatesCompare(c, closedList)  )
         {
-            if( CoordinatesCompare(c, tempList) )
+            
+            if( paggMainFrame.getFieldTableModel().getTileTable()[c.getRow()][c.getCol()].isWalkable() 
+            &&  !paggMainFrame.getFieldTableModel().getTileTable()[c.getRow()][c.getCol()].isOccupied() == true)
             {
-                if( paggMainFrame.getFieldTableModel().getTileTable()[c.getRow()][c.getCol()].isWalkable() 
-                &&  !paggMainFrame.getFieldTableModel().getTileTable()[c.getRow()][c.getCol()].isOccupied() == true)
+                if ( paggMainFrame.getFieldTableModel().getTileTable()[c.getRow()][c.getCol()].isObstacle() == true )
                 {
-                    if ( paggMainFrame.getFieldTableModel().getTileTable()[c.getRow()][c.getCol()].isObstacle() == true )
-                    {
-                            c.setMoveCost(totalMoveCost+2);
-                    }
-                    else
-                    {
-                            c.setMoveCost(totalMoveCost+1);
-                    }
-                    tempList.add(c);
-                    System.out.println(c.getRow()+" "+c.getCol()+" "+c.getMoveCost()+" "+c.isParent()+" in checkListAdd erstellt und zu tempList hinzugef.");
+                        c.setMoveCost(totalMoveCost+2);
+                }
+                else
+                {
+                        c.setMoveCost(totalMoveCost+1);
                 }
                 
-            }
-            else
-            {       //hat noch keine Movekosten -------------------------------------------------------überprüfung später
-                System.out.println("größe von TempList: "+tempList.size()+" "+c.getMoveCost());
-                if ( tempList.get(tempList.indexOf(c)).getMoveCost() > c.getMoveCost() )        //überprüfe movementGröße von c und objekt in tempList mit gleichen Koordinaten und nehme den kleineren Wert 
+            
+                if( !CoordinatesCompare(c, tempList) )
                 {
-                    tempList.get(tempList.indexOf(c)).setMoveCost(c.getMoveCost());
-                }     
+    //                System.out.println("größe von TempList: "+tempList.size()+" "+c.getMoveCost());
+                    System.out.println("Prüfung von tempList auf Koordinaten von c ("+c.getRow()+" "+c.getCol()+") positiv!");
+    //                if ( tempList.get(tempList.indexOf(c)).getMoveCost() > c.getMoveCost() )        //überprüfe movementGröße von c und objekt in tempList mit gleichen Koordinaten und nehme den kleineren Wert 
+                    if ( tempCoordinates.getMoveCost() > c.getMoveCost() )        //überprüfe movementGröße von c und objekt in tempList mit gleichen Koordinaten und nehme den kleineren Wert 
+                    {
+                        tempList.get(tempList.indexOf(tempCoordinates)).setMoveCost(c.getMoveCost());
+                        System.out.println("MoveCost von "+tempList.get(tempList.indexOf(tempCoordinates)).getRow()+" "+
+                            tempList.get(tempList.indexOf(tempCoordinates)).getCol()+" auf "+tempList.get(tempList.indexOf(tempCoordinates)).getMoveCost()+" geändert!" );
+                    } 
+
+                }
+                else
+                {
+                        tempList.add(c);
+                        System.out.println(c.getRow()+" "+c.getCol()+" "+c.getMoveCost()+" "+c.isParent()+" in checkListAdd erstellt und zu tempList hinzugef.");
+                }
             }
+            
             
         }
         
