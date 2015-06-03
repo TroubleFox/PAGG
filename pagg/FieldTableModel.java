@@ -37,7 +37,7 @@ class FieldTableModel extends AbstractTableModel
 
 //        System.out.println(tileSet.size());
 
-        integerMap = ml.einlesen("src/maps/integerMap1.txt");
+        integerMap = ml.loading("src/maps/integerMap1.txt");
         int zeile=0;
         int spalte;
 //        while(zeile < integerMap.length) { 
