@@ -28,24 +28,38 @@ class FieldTableModel extends AbstractTableModel
         MapLoader ml = new MapLoader();
 //        System.out.println(ml.getRows() + ml.getCols());
         tileTable = new Tile[ml.getRows()][ml.getCols()]; 
+
         tileTableOrigin = new Tile[ml.getRows()][ml.getCols()];
         int[][] integerMap = new int[ml.getRows()][ml.getCols()];
         //holt auf MapLoader die größe des 2DimArrays
-        ts.einlesen("src/data/integerTileSet.txt");                        //ließt hier das TileSet ein
-        tileSet = ts.getTileSet();                                      //holt Liste aus TileSet in tileSet
+//        ts.loading("src/data/integerTileSet.txt");                        //ließt hier das TileSet ein
+//        tileSet = ts.getTileSet();                                      //holt Liste aus TileSet in tileSet
 
 //        System.out.println(tileSet.size());
 
         integerMap = ml.einlesen("src/maps/integerMap1.txt");
         int zeile=0;
         int spalte;
+//        while(zeile < integerMap.length) { 
+////        while(zeile < integerMap.length) {                                                                //    oder  ml.loading("/maps/integerMap1.txt").length
+//            for (spalte = 0; spalte < integerMap[0].length; spalte++) {
+////                System.out.println(tileSet.get(40).getTileNum());
+////                System.out.println(integerMap[0][0]);
+//                tileTable[zeile][spalte] = tileSet.get(integerMap[zeile][spalte]);                          
+////                System.out.println(tileTable[0][0].getTileNum());
+//       
+//                
+//            }
+//            zeile++;
+//        }
         while(zeile < integerMap.length) { 
-//        while(zeile < integerMap.length) {                                                                //    oder  ml.einlesen("/maps/integerMap1.txt").length
+//        while(zeile < integerMap.length) {                                                                //    oder  ml.loading("/maps/integerMap1.txt").length
             for (spalte = 0; spalte < integerMap[0].length; spalte++) {
 //                System.out.println(tileSet.get(40).getTileNum());
 //                System.out.println(integerMap[0][0]);
-                tileTable[zeile][spalte] = tileSet.get(integerMap[zeile][spalte]);                          
+                tileTable[zeile][spalte] = ts.loading("src/data/integerTileSet.txt", (integerMap[zeile][spalte]));                          
 //                System.out.println(tileTable[0][0].getTileNum());
+       
                 
             }
             zeile++;
@@ -95,7 +109,7 @@ class FieldTableModel extends AbstractTableModel
         1. alte Spielerposition resetten
         2.Sichtbarkeit des Feldes neu berechnen -> ausgehend neuer Spielerposition
         3.Sicht = Schussweite
-        4.Tilearray neu einlesen
+        4.Tilearray neu loading
         */
     }
     
