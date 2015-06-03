@@ -7,6 +7,16 @@ Goals: fov-basic or -diamond;
 fog of war
 
 
+03-06-2015 ---------------------------------------------------------
+
+Movement algorithm almost done. Working just as i planed.
+Have to fix OutOfBoundsException when calculating near field border.
+
+But so far:
+![path1](https://cloud.githubusercontent.com/assets/12558206/7956158/5f0611d8-09de-11e5-8689-382fd2fc5146.jpg)
+![path2](https://cloud.githubusercontent.com/assets/12558206/7956161/645f71d8-09de-11e5-9f97-b0020676ba06.jpg)
+
+
 29-05-2015 ---------------------------------------------------------
 
 testing written breadth-first-algorithm for movement calculation!
