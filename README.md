@@ -7,7 +7,7 @@ great goals: fov-basic or -diamond<br>
 fog of war<br>
 threading<br>
 
-until most of the game is in construction the code will be full of comments with old code parts.
+until most of the game is finished the code will be full of comments with old code parts.
 I'll tidy things up, when i feel its time to do it. Deal with it! ;)
 
 03-06-2015 ---------------------------------------------------------
