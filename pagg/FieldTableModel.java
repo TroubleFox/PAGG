@@ -21,7 +21,7 @@ class FieldTableModel extends AbstractTableModel
     public FieldTableModel()
     {
         
-        List<Tile> tileSet = new ArrayList<>();
+//        List<Tile> tileSet = new ArrayList<>();
         
         TileSet ts = new TileSet();
 //        System.out.println(ts.getTileSet().size());
@@ -69,8 +69,45 @@ class FieldTableModel extends AbstractTableModel
         System.arraycopy(tileTable[i], 0, tileTableOrigin[i], 0, tileTable[i].length);                      //kopiert 2D.Array ohne Referenz
         
         }
-                 
+    }
+    
+    public void changeMap(String mapName)
+    {
         
+//        List<Tile> tileSet = new ArrayList<>();
+        
+        TileSet ts = new TileSet();
+
+        MapLoader ml = new MapLoader();
+
+        this.tileTable = new Tile[ml.getRows()][ml.getCols()]; 
+
+        this.tileTableOrigin = new Tile[ml.getRows()][ml.getCols()];
+        int[][] integerMap = new int[ml.getRows()][ml.getCols()];
+
+        System.out.println(mapName+"");
+        integerMap = ml.loading("src/maps/"+mapName+".txt");
+        int zeile=0;
+        int spalte;
+
+        while(zeile < integerMap.length) { 
+//        while(zeile < integerMap.length) {                                                                //    oder  ml.loading("/maps/integerMap1.txt").length
+            for (spalte = 0; spalte < integerMap[0].length; spalte++) {
+//                System.out.println(tileSet.get(40).getTileNum());
+//                System.out.println(integerMap[0][0]);
+                tileTable[zeile][spalte] = ts.loading("src/data/integerTileSet.txt", (integerMap[zeile][spalte]));                          
+//                System.out.println(tileTable[0][0].getTileNum());
+       
+                
+            }
+            zeile++;
+        }
+        for (int i = 0; i < tileTable.length; i++) {
+            
+        System.arraycopy(tileTable[i], 0, tileTableOrigin[i], 0, tileTable[i].length);                      //kopiert 2D.Array ohne Referenz
+        
+        }
+                   
     }
 
 //    @Override
@@ -139,7 +176,16 @@ class FieldTableModel extends AbstractTableModel
     public void setTileTable(Tile[][] tileTable) {
         this.tileTable = tileTable;
     }
-
+    
+    public void copyTileTable(int row, int col, Tile[][] map)
+    {
+        System.arraycopy(tileTableOrigin[row], col, tileTable[row], col, 1);
+    }
+    
+    public void copyTileTable(int rowo, int colo, int rowd, int cold, Tile[][] map)
+    {
+        System.arraycopy(tileTable[rowo], colo, tileTable[rowd], cold, 1);
+    }
     /**
      * @return the player2
      */
