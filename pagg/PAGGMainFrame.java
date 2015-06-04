@@ -28,19 +28,24 @@ import sun.swing.ImageIconUIResource;
 public class PAGGMainFrame extends javax.swing.JFrame {
 
     private FieldTableModel fieldTableModel;
-    private int s1row;
-    private int s1col;
-    private int s2row;
-    private int s2col;
+//    private int s1row;
+//    private int s1col;
+//    private int s2row;
+//    private int s2col;
     private List<Coordinates> sm = new ArrayList<>();
+    private boolean toggleGrid = false;
+    private boolean startButton= false;
+    private boolean playerSet=false;
     /**
      * Creates new form PAGGMainFrame
      */
     public PAGGMainFrame() {
         
         fieldTableModel = new FieldTableModel();
+        
 //        ImageCellRenderer renderer = new ImageCellRenderer();
         initComponents();
+        jTable1.setGridColor(Color.black);
     }
 
     /**
@@ -55,9 +60,16 @@ public class PAGGMainFrame extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jPanel1 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        Start = new javax.swing.JButton();
         movementbutton = new javax.swing.JButton();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenuMain = new javax.swing.JMenu();
+        menuStartPlayer = new javax.swing.JMenuItem();
+        jMenuMap = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
+        jMenuItem3 = new javax.swing.JMenuItem();
+        jMenu2 = new javax.swing.JMenu();
+        menuToggleGrid = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -87,20 +99,6 @@ public class PAGGMainFrame extends javax.swing.JFrame {
 
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        jButton1.setText("jButton1");
-        jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton1MouseClicked(evt);
-            }
-        });
-
-        Start.setText("Start");
-        Start.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                StartMouseClicked(evt);
-            }
-        });
-
         movementbutton.setText("display movement");
         movementbutton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -113,24 +111,71 @@ public class PAGGMainFrame extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(469, 469, 469)
-                .addComponent(jButton1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(Start)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(444, 444, 444)
                 .addComponent(movementbutton)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(141, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(Start)
-                    .addComponent(movementbutton))
+                .addContainerGap(73, Short.MAX_VALUE)
+                .addComponent(movementbutton)
                 .addContainerGap())
         );
+
+        jMenuMain.setText("Main");
+
+        menuStartPlayer.setText("start player");
+        menuStartPlayer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuStartPlayerActionPerformed(evt);
+            }
+        });
+        jMenuMain.add(menuStartPlayer);
+
+        jMenuMap.setText("load map");
+
+        jMenuItem1.setText("ForestTemple");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenuMap.add(jMenuItem1);
+
+        jMenuItem2.setText("BreezyPlain");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
+        jMenuMap.add(jMenuItem2);
+
+        jMenuItem3.setText("TestPlain");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
+        jMenuMap.add(jMenuItem3);
+
+        jMenuMain.add(jMenuMap);
+
+        jMenuBar1.add(jMenuMain);
+
+        jMenu2.setText("Settings");
+
+        menuToggleGrid.setText("toggle grid");
+        menuToggleGrid.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuToggleGridActionPerformed(evt);
+            }
+        });
+        jMenu2.add(menuToggleGrid);
+
+        jMenuBar1.add(jMenu2);
+
+        setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -139,10 +184,10 @@ public class PAGGMainFrame extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1034, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addContainerGap())
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1034, Short.MAX_VALUE)))
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -150,7 +195,7 @@ public class PAGGMainFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 797, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 828, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -189,12 +234,15 @@ public class PAGGMainFrame extends javax.swing.JFrame {
             fieldTableModel.getTileTable()[e.getRow()][e.getCol()].setPath(false);
             
             }
-            fieldTableModel.setTileTable(fieldTableModel.getTileTableOrigin());
+//            fieldTableModel.setTileTable(fieldTableModel.getTileTableOrigin());
             
+//            System.arraycopy(fieldTableModel.getTileTableOrigin()[], jTable1.getSelectedColumn(), fieldTableModel.setTileTable, jTable1.getSelectedColumn(), 1); 
             
-            fieldTableModel.setValueAt(fieldTableModel.getPlayer1(), jTable1.getSelectedRow(), jTable1.getSelectedColumn());
-            fieldTableModel.setValueAt(fieldTableModel.getTileTableOrigin()[getS1row()][getS1col()], getS1row(), getS1col());
-            fieldTableModel.setValueAt(fieldTableModel.getTileTableOrigin()[fieldTableModel.getPlayer1().getRow()][fieldTableModel.getPlayer1().getCol()], fieldTableModel.getPlayer1().getRow(),fieldTableModel.getPlayer1().getCol());
+            fieldTableModel.copyTileTable(fieldTableModel.getPlayer1().getRow(), fieldTableModel.getPlayer1().getCol(), jTable1.getSelectedRow(), jTable1.getSelectedColumn(), fieldTableModel.getTileTable());
+//            fieldTableModel.setValueAt(fieldTableModel.getPlayer1(), jTable1.getSelectedRow(), jTable1.getSelectedColumn());
+            fieldTableModel.copyTileTable(fieldTableModel.getPlayer1().getRow(), fieldTableModel.getPlayer1().getCol(), fieldTableModel.getTileTableOrigin());
+//            fieldTableModel.setValueAt(fieldTableModel.getTileTableOrigin()[getS1row()][getS1col()], getS1row(), getS1col());
+//            fieldTableModel.setValueAt(fieldTableModel.getTileTableOrigin()[fieldTableModel.getPlayer1().getRow()][fieldTableModel.getPlayer1().getCol()], fieldTableModel.getPlayer1().getRow(),fieldTableModel.getPlayer1().getCol());
             fieldTableModel.getPlayer1().setRow(jTable1.getSelectedRow());
             fieldTableModel.getPlayer1().setCol(jTable1.getSelectedColumn());
        
@@ -204,33 +252,84 @@ public class PAGGMainFrame extends javax.swing.JFrame {
       
     }                                    
 
-    private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {                                      
-        for (int i = 0; i < 24; i++) {                                                    //Feldwertausgabe
-            for (int j = 0; j < 32; j++) {
-                System.out.print(fieldTableModel.getTileTable()[i][j].isSightBlock()+",");
-            }
-            System.out.println("");
-        }
-        System.out.println("");
-        System.out.println(fieldTableModel.getTileTableOrigin()[0][0].toString());
-        System.out.println(fieldTableModel.getTileTable()[0][0].toString());
-     
-     fieldTableModel.fireTableDataChanged();
-    }                                     
+    private void movementbuttonMouseClicked(java.awt.event.MouseEvent evt) {                                            
+        
+        if( playerSet==true)
+        {
+            System.out.println("Ausgabe Koordinaten in MainFrame aus fieldTableModel: "+fieldTableModel.getPlayer1().getRow()+" "+fieldTableModel.getPlayer1().getCol());
 
-    private void StartMouseClicked(java.awt.event.MouseEvent evt) {                                   
-//        System.out.println("originalTile: "+fieldTableModel.getTileTableOrigin()[11][3].getImage());
-        fieldTableModel.getPlayer1().setOccupied(true);
-//        fieldTableModel.getPlayer2().setOccupied(true);
-        fieldTableModel.getPlayer1().setRow(11);
-        fieldTableModel.getPlayer1().setCol(10);
+            ShowMovement sm = new ShowMovement(fieldTableModel.getPlayer1().getRow(), fieldTableModel.getPlayer1().getCol(), fieldTableModel.getPlayer1().getMovementSpeed(), fieldTableModel.getTileTable());
+            sm.newNodes();
+            System.out.println("kurz vor Listenausgabe");
+            sm.getClosedList().remove(0);
+            this.sm = sm.getClosedList();
+            for (Coordinates e : sm.getClosedList() ) {
+                System.out.println("x: "+e.getRow()+" y: "+e.getCol());
+                fieldTableModel.getTileTable()[e.getRow()][e.getCol()].setPath(true);
+
+            }
+            fieldTableModel.fireTableDataChanged();
+        }
         
-//        s2row = 10;
-//        s2col = 28;
         
-        fieldTableModel.getTileTable()[11][10] = fieldTableModel.getPlayer1();
-//        fieldTableModel.getTileTable()[10][28] = fieldTableModel.getPlayer2();
+    }                                           
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {                                           
+        startButton=false;
+        playerSet=false;
+        fieldTableModel.changeMap("ForestTemple");
         fieldTableModel.fireTableDataChanged();
+    }                                          
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {                                           
+        startButton=false;
+        playerSet=false;
+        fieldTableModel.changeMap("BreezyPlain");
+        fieldTableModel.fireTableDataChanged();
+    }                                          
+
+    private void menuToggleGridActionPerformed(java.awt.event.ActionEvent evt) {                                               
+        if( toggleGrid == false)
+        {
+            jTable1.setShowGrid(true);
+            toggleGrid=true;
+        }
+        else
+        {
+            jTable1.setShowGrid(false);
+            toggleGrid=false;
+        }
+        
+        
+        // TODO add your handling code here:
+    }                                              
+
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {                                           
+        startButton=false;
+        playerSet=false;
+        fieldTableModel.changeMap("TestPlain");
+        fieldTableModel.fireTableDataChanged();
+    }                                          
+
+    private void menuStartPlayerActionPerformed(java.awt.event.ActionEvent evt) {                                                
+        //        System.out.println("originalTile: "+fieldTableModel.getTileTableOrigin()[11][3].getImage());
+        if( startButton==false )
+        {
+            startButton=true;
+            playerSet=true;
+            fieldTableModel.getPlayer1().setOccupied(true);
+        //        fieldTableModel.getPlayer2().setOccupied(true);
+            fieldTableModel.getPlayer1().setRow(11);
+            fieldTableModel.getPlayer1().setCol(10);
+
+        //        s2row = 10;
+        //        s2col = 28;
+
+            fieldTableModel.getTileTable()[11][10] = fieldTableModel.getPlayer1();
+        //        fieldTableModel.getTileTable()[10][28] = fieldTableModel.getPlayer2();
+            fieldTableModel.fireTableDataChanged();
+        }
+        
 //        System.out.println("originalTile: "+fieldTableModel.getTileTableOrigin()[11][3].getImage());
                 
 //        fieldTableModel.getSpieler().setOccupied(true);
@@ -238,26 +337,7 @@ public class PAGGMainFrame extends javax.swing.JFrame {
 //        fieldTableModel.getTileTable()[1][1].setImage(new ImageIcon("src/images/0.jpg"));       //ersetzt ein Tileobjekt im TileTable
 //        fieldTableModel.setValueAt(this, WIDTH, WIDTH);                                         //ersetzt ein Objekt in der Anzeige = neuer Spielstand
 //        fieldTableModel.getSpieler().setImage(new ImageIcon("src/images/spieler1.jpg"));
-    }                                  
-
-    private void movementbuttonMouseClicked(java.awt.event.MouseEvent evt) {                                            
-        System.out.println("Ausgabe Koordinaten in MainFrame aus fieldTableModel: "+fieldTableModel.getPlayer1().getRow()+" "+fieldTableModel.getPlayer1().getCol());
-        
-        ShowMovement sm = new ShowMovement(fieldTableModel.getPlayer1().getRow(), fieldTableModel.getPlayer1().getCol(), fieldTableModel.getPlayer1().getMovementSpeed());
-        sm.newNodes();
-        System.out.println("kurz vor Listenausgabe");
-        sm.getClosedList().remove(0);
-        this.sm = sm.getClosedList();
-        for (Coordinates e : sm.getClosedList() ) {
-            System.out.println("x: "+e.getRow()+" y: "+e.getCol());
-            fieldTableModel.getTileTable()[e.getRow()][e.getCol()].setPath(true);
-            
-        }
-        fieldTableModel.fireTableDataChanged();
-        
-        
-        
-    }                                           
+    }                                               
 
     
     
@@ -295,41 +375,22 @@ public class PAGGMainFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify                     
-    private javax.swing.JButton Start;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JMenu jMenuMain;
+    private javax.swing.JMenu jMenuMap;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
+    private javax.swing.JMenuItem menuStartPlayer;
+    private javax.swing.JMenuItem menuToggleGrid;
     private javax.swing.JButton movementbutton;
     // End of variables declaration                   
 
-    /**
-     * @return the s1row
-     */
-    public int getS1row() {
-        return s1row;
-    }
-
-    /**
-     * @param s1row the s1row to set
-     */
-    public void setS1row(int s1row) {
-        this.s1row = s1row;
-    }
-
-    /**
-     * @return the s1col
-     */
-    public int getS1col() {
-        return s1col;
-    }
-
-    /**
-     * @param s1col the s1col to set
-     */
-    public void setS1col(int s1col) {
-        this.s1col = s1col;
-    }
+    
     
     public FieldTableModel getFieldTableModel()
     {
