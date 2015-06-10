@@ -11,6 +11,14 @@ until most of the game is finished the code will be full of comments with old co
 I'll tidy things up, when i feel its time to do it. Deal with it! ;)
 
 
+10-06-2015 ---------------------------------------------------------
+
+Took me a couple of days to invent a sight algorithm. It's not fully functional. Up until now only single sight blocks are working. Still have to combine vectors from sight blocks that are linked (walls). But for now i am happy with the results.
+
+![sightdemo1](https://cloud.githubusercontent.com/assets/12558206/8083568/dc3968f6-0f85-11e5-9b0c-921b8bbee768.jpg)
+![sightdemo2](https://cloud.githubusercontent.com/assets/12558206/8083571/e0a16146-0f85-11e5-831b-20d4a2e7caaf.jpg)
+![sightdemo3](https://cloud.githubusercontent.com/assets/12558206/8083576/e448b132-0f85-11e5-9793-c3b10aaac6ff.jpg)
+
 04-06-2015 ---------------------------------------------------------
 
 movement fixed and done.
