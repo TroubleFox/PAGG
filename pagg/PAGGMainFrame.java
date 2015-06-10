@@ -2,6 +2,7 @@ package pagg;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -16,6 +17,7 @@ import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
@@ -32,7 +34,7 @@ public class PAGGMainFrame extends javax.swing.JFrame {
 //    private int s1col;
 //    private int s2row;
 //    private int s2col;
-    private List<Coordinates> sm = new ArrayList<>();
+    private List<MoveCoordinates> sm = new ArrayList<>();
     private boolean toggleGrid = false;
     private boolean startButton= false;
     private boolean playerSet=false;
@@ -61,6 +63,8 @@ public class PAGGMainFrame extends javax.swing.JFrame {
         jTable1 = new javax.swing.JTable();
         jPanel1 = new javax.swing.JPanel();
         movementbutton = new javax.swing.JButton();
+        buttonSight = new javax.swing.JButton();
+        buttonClearSight = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenuMain = new javax.swing.JMenu();
         menuStartPlayer = new javax.swing.JMenuItem();
@@ -106,6 +110,20 @@ public class PAGGMainFrame extends javax.swing.JFrame {
             }
         });
 
+        buttonSight.setText("sight");
+        buttonSight.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonSightActionPerformed(evt);
+            }
+        });
+
+        buttonClearSight.setText("clear sight");
+        buttonClearSight.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonClearSightActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -113,13 +131,20 @@ public class PAGGMainFrame extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(444, 444, 444)
                 .addComponent(movementbutton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(buttonSight)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(buttonClearSight)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(73, Short.MAX_VALUE)
-                .addComponent(movementbutton)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(movementbutton)
+                    .addComponent(buttonSight)
+                    .addComponent(buttonClearSight))
                 .addContainerGap())
         );
 
@@ -204,6 +229,18 @@ public class PAGGMainFrame extends javax.swing.JFrame {
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {                                     
         
+        int zeile = 0;
+    while(zeile < fieldTableModel.getTileTable().length)
+        {
+            for (int i=0; i<fieldTableModel.getTileTable()[0].length; i++) {
+                if( fieldTableModel.getTileTable()[zeile][i].isVisible() == false)
+                {
+                   fieldTableModel.getTileTable()[zeile][i].setVisible(true);
+                }
+            }
+            zeile++;
+        }
+        
 //        fieldTableModel.setValueAt(this, jTable1.getSelectedRow(), jTable1.getSelectedColumn());
         
 //        if( (fieldTableModel.getTileTable()[jTable1.getSelectedRow()][jTable1.getSelectedColumn()].isWalkable() 
@@ -229,8 +266,8 @@ public class PAGGMainFrame extends javax.swing.JFrame {
 
         if( fieldTableModel.getTileTable()[jTable1.getSelectedRow()][jTable1.getSelectedColumn()].isPath() )
         {   
-            for (Coordinates e : sm ) {
-            System.out.println("x: "+e.getRow()+" y: "+e.getCol());
+            for (MoveCoordinates e : sm ) {
+//            System.out.println("x: "+e.getRow()+" y: "+e.getCol());
             fieldTableModel.getTileTable()[e.getRow()][e.getCol()].setPath(false);
             
             }
@@ -245,6 +282,10 @@ public class PAGGMainFrame extends javax.swing.JFrame {
 //            fieldTableModel.setValueAt(fieldTableModel.getTileTableOrigin()[fieldTableModel.getPlayer1().getRow()][fieldTableModel.getPlayer1().getCol()], fieldTableModel.getPlayer1().getRow(),fieldTableModel.getPlayer1().getCol());
             fieldTableModel.getPlayer1().setRow(jTable1.getSelectedRow());
             fieldTableModel.getPlayer1().setCol(jTable1.getSelectedColumn());
+            
+        ShowSight ss = new ShowSight(fieldTableModel.getPlayer1().getRow(), fieldTableModel.getPlayer1().getCol(), fieldTableModel.getTileTable());
+        ss.newNodes();
+        fieldTableModel.setTileTable(ss.getMap());
        
        
         fieldTableModel.fireTableDataChanged();
@@ -256,15 +297,15 @@ public class PAGGMainFrame extends javax.swing.JFrame {
         
         if( playerSet==true)
         {
-            System.out.println("Ausgabe Koordinaten in MainFrame aus fieldTableModel: "+fieldTableModel.getPlayer1().getRow()+" "+fieldTableModel.getPlayer1().getCol());
+//            System.out.println("Ausgabe Koordinaten in MainFrame aus fieldTableModel: "+fieldTableModel.getPlayer1().getRow()+" "+fieldTableModel.getPlayer1().getCol());
 
             ShowMovement sm = new ShowMovement(fieldTableModel.getPlayer1().getRow(), fieldTableModel.getPlayer1().getCol(), fieldTableModel.getPlayer1().getMovementSpeed(), fieldTableModel.getTileTable());
             sm.newNodes();
-            System.out.println("kurz vor Listenausgabe");
+//            System.out.println("kurz vor Listenausgabe");
             sm.getClosedList().remove(0);
             this.sm = sm.getClosedList();
-            for (Coordinates e : sm.getClosedList() ) {
-                System.out.println("x: "+e.getRow()+" y: "+e.getCol());
+            for (MoveCoordinates e : sm.getClosedList() ) {
+//                System.out.println("x: "+e.getRow()+" y: "+e.getCol());
                 fieldTableModel.getTileTable()[e.getRow()][e.getCol()].setPath(true);
 
             }
@@ -299,9 +340,6 @@ public class PAGGMainFrame extends javax.swing.JFrame {
             jTable1.setShowGrid(false);
             toggleGrid=false;
         }
-        
-        
-        // TODO add your handling code here:
     }                                              
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {                                           
@@ -339,6 +377,63 @@ public class PAGGMainFrame extends javax.swing.JFrame {
 //        fieldTableModel.getSpieler().setImage(new ImageIcon("src/images/spieler1.jpg"));
     }                                               
 
+    private void buttonSightActionPerformed(java.awt.event.ActionEvent evt) {                                            
+        if( playerSet==true)
+        {
+
+            int zeile=0;
+            
+            ShowSight ss = new ShowSight(fieldTableModel.getPlayer1().getRow(), fieldTableModel.getPlayer1().getCol(), fieldTableModel.getTileTable());
+//            while(zeile < ss.getMap().length)
+//            {
+//                for (int i=0; i<ss.getMap()[0].length; i++) {
+//                    if( ss.getMap()[zeile][i].isVisible() == false)
+//                    {
+//                        System.out.println(zeile+" "+i);
+//                    }
+//                }
+//                zeile++;
+//            }
+            ss.newNodes();
+//            System.out.println("kurz vor Listenausgabe");
+//            ss.getClosedList().remove(0);
+//            this.ss = ss.getClosedList();
+            
+//            while(zeile < ss.getMap().length)
+//            {
+//                for (int i=0; i<ss.getMap()[0].length; i++) {
+//                    if( ss.getMap()[zeile][i].isVisible() == false)
+//                    {
+//                        System.out.println(zeile+" "+i);
+//                    }
+//                }
+//                zeile++;
+//            }
+            fieldTableModel.setTileTable(ss.getMap());
+//            for (SightCoordinates e : ss.getClosedList() ) {
+//                System.out.println("x: "+e.getRow()+" y: "+e.getCol()+" auf unsichtbar gesetzt");
+//                fieldTableModel.getTileTable()[e.getRow()][e.getCol()].setVisible(false);
+//
+//            }
+            fieldTableModel.fireTableDataChanged();
+        }
+    }                                           
+
+    private void buttonClearSightActionPerformed(java.awt.event.ActionEvent evt) {                                                 
+    int zeile = 0;
+    while(zeile < fieldTableModel.getTileTable().length)
+        {
+            for (int i=0; i<fieldTableModel.getTileTable()[0].length; i++) {
+                if( fieldTableModel.getTileTable()[zeile][i].isVisible() == false)
+                {
+                   fieldTableModel.getTileTable()[zeile][i].setVisible(true);
+                }
+            }
+            zeile++;
+        }
+        fieldTableModel.fireTableDataChanged();
+    }                                                
+
     
     
     
@@ -375,6 +470,8 @@ public class PAGGMainFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify                     
+    private javax.swing.JButton buttonClearSight;
+    private javax.swing.JButton buttonSight;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
@@ -461,6 +558,7 @@ public class PAGGMainFrame extends javax.swing.JFrame {
     {
         private JLabel lbl = new JLabel();
         private JLabel lbl2 = new JLabel("test");
+        private JPanel jtbl = new JPanel();
         private MyLabel lbl4 = new MyLabel();
         
 //        private ImageIcon image = null;
@@ -498,70 +596,42 @@ public class PAGGMainFrame extends javax.swing.JFrame {
                                                        boolean hasFocus,
                                                        int rowIndex, int colIndex)
         {
-            setOpaque(true);
+            
+            
+//            setOpaque(true);
             setText("");
 //            setIcon(fieldTableModel.getTileTable()[rowIndex][colIndex].getImage());
 //            setIcon(((Tile) value).getImage());                                      //alternativ auch möglich
-            ImageIcon image = new ImageIcon("src/images/blue.png");
+
             ImageIcon image1 = fieldTableModel.getTileTable()[rowIndex][colIndex].getImage();
               
-//            ImageIcon image = new ImageIcon();
-//            if( fieldTableModel.getTileTable()[rowIndex][colIndex].isPath() )
-//            {
-//                ImageIcon image2 = new ImageIcon("src/images/blues/"+fieldTableModel.getTileTable()[rowIndex][colIndex].getTileNum()+"b.jpg");
-//                image = image2;
-//            }
-//            else
-//            {
-//                image = fieldTableModel.getTileTable()[rowIndex][colIndex].getImage();
-//            }
+//            
             lbl.setIcon(image1);
             
+            //ändert Tile nach Pfadberechnung auf teils-blau
             if( fieldTableModel.getTileTable()[rowIndex][colIndex].isPath() )
             {
-//                lbl2.setOpaque(true);
-//                lbl2.setBackground(Color.red);
-//                lbl2.setForeground(Color.blue);
-//                lbl2.setFont(lbl2.getFont().deriveFont(Font.BOLD, 48));
-//
-//                lbl2.setIcon(image);
-//                lbl2.setText("hi");
 //                
-                  lbl.setIcon(new ImageIcon("src/images/blues/"+fieldTableModel.getTileTable()[rowIndex][colIndex].getTileNum()+"b.jpg"));
-//                lbl.add(lbl2);
-//                return lbl2;
+                 
+                lbl.setIcon(new ImageIcon("src/images/blues/"+fieldTableModel.getTileTable()[rowIndex][colIndex].getTileNum()+"b.jpg"));
+//                add(lbl);
+//                jtbl.setBounds(0,0,32,32);
+//                jtbl.setPreferredSize(new Dimension(32, 32));
+//                jtbl.setOpaque(false);
+//                add(jtbl);      
+            }
+            //ändert Tile nach Sichtberechnung auf teils-grau
+            else if(!fieldTableModel.getTileTable()[rowIndex][colIndex].isVisible())
+            {
+                
+                lbl.setIcon(new ImageIcon("src/images/blacks/"+fieldTableModel.getTileTable()[rowIndex][colIndex].getTileNum()+"bla.png"));
+//                jtbl.setBackground(new Color(0,0,0,125));
+//                
+      
             }
             else
             {
-//                image = fieldTableModel.getTileTable()[rowIndex][colIndex].getImage();
-            
-            
-//            if(hasFocus)
-//            {
-//                setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.yellow));
-//            }
-//            else
-//            {
-//                setBorder(null);
-//            }
-//            if(isSelected)
-//            {
-//                lbl.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.yellow));
-//            }
-//            else
-//            {
-//                lbl.setBorder(null);
-//            }
-//            lbl.setBackground(Color.blue);
-//            if( fieldTableModel.getTileTable()[rowIndex][colIndex].isPath())
-//            {
-//                lbl.setBorder(BorderFactory.createMatteBorder(1,1,1,1,Color.BLUE.brighter()));
-//            }
-//            lbl.setBorder(BorderFactory.createMatteBorder(1,1,1,1,Color.BLUE.brighter()));
-
-//            fillColor(jTable1,lbl4,isSelected);
-
-//            return lbl;
+                
             }
             return lbl;
         }   
